@@ -25,3 +25,6 @@ const port = 100;
 const server = app.listen(port, () => {
   console.log(`Running at ${port}`);
 });
+
+// Routes
+app.get("");
