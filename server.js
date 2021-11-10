@@ -27,4 +27,6 @@ const server = app.listen(port, () => {
 });
 
 // Routes
-app.get("");
+app.get("/get-weather-data", (req, res) => {
+  res.send(projectData);
+});
