@@ -30,3 +30,7 @@ const server = app.listen(port, () => {
 app.get("/get-weather-data", (req, res) => {
   res.send(projectData);
 });
+
+app.post("/set-weather-data", (req, res) => {
+  projectData = req.body;
+});

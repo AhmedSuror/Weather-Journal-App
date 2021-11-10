@@ -24,8 +24,8 @@ const getWeatherData = async (zip, apiKey) => {
   const res = await fetch(`${baseURL}zip=${zip}&appid=${apiKey}`);
   try {
     const data = await res.json();
-    return data;
     console.log(data);
+    return data;
   } catch (error) {
     console.log(error);
   }
@@ -41,6 +41,21 @@ const updateUIFromEndPoint = async () => {
     document.getElementById("temp").innerHTML = data.temprature;
     document.getElementById("date").innerHTML = data.date;
     document.getElementById("content").innerHTML = data.content;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const postData = async (url = "", data = {}) => {
+  const res = await fetch(url, {
+    method: "POST",
+    credentials: "same-origin",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  try {
+    const newData = await res.json();
+    return newData;
   } catch (error) {
     console.log(error);
   }
