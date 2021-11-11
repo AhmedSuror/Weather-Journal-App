@@ -10,7 +10,19 @@ let newDate = d.getMonth() + 1 + "." + d.getDate() + "." + d.getFullYear();
 
 // Event listener
 document.getElementById("generate").addEventListener("click", generateCallBack);
-function generateCallBack(e) {}
+function generateCallBack(e) {
+  let zip = document.getElementById("zip").value;
+  let content = document.getElementById("feelings").value;
+  getWeatherData(zip, key).then(function (data) {
+    postData("/set-weather-data", {
+      temp: data.main.temp,
+      date: newDate,
+      content: content,
+    }).then(function () {
+      updateUIFromEndPoint();
+    });
+  });
+}
 
 // Fetch functions
 
@@ -24,7 +36,7 @@ const getWeatherData = async (zip, apiKey) => {
   const res = await fetch(`${baseURL}zip=${zip}&appid=${apiKey}`);
   try {
     const data = await res.json();
-    console.log(data);
+    // console.log(data);
     return data;
   } catch (error) {
     console.log(error);
@@ -38,14 +50,19 @@ const updateUIFromEndPoint = async () => {
   const res = await fetch("/get-weather-data");
   try {
     const data = await res.json();
-    document.getElementById("temp").innerHTML = data.temprature;
-    document.getElementById("date").innerHTML = data.date;
-    document.getElementById("content").innerHTML = data.content;
+    document.getElementById("temp").innerHTML = `Temprature: ${data.temp}`;
+    document.getElementById("date").innerHTML = `Date: ${data.date}`;
+    document.getElementById("content").innerHTML = `Feeling: ${data.content}`;
   } catch (error) {
     console.log(error);
   }
 };
 
+/**
+ * Save the data returned from the remote API to the endpoint route.
+ * @param {*} url The POST URL.
+ * @param {*} data The data to POST.
+ */
 const postData = async (url = "", data = {}) => {
   const res = await fetch(url, {
     method: "POST",
@@ -53,10 +70,4 @@ const postData = async (url = "", data = {}) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
-  try {
-    const newData = await res.json();
-    return newData;
-  } catch (error) {
-    console.log(error);
-  }
 };
