@@ -33,7 +33,7 @@ function generateCallBack(e) {
  * @returns Weather data.
  */
 const getWeatherData = async (zip, apiKey) => {
-  const res = await fetch(`${baseURL}zip=${zip}&appid=${apiKey}`);
+  const res = await fetch(`${baseURL}zip=${zip}&appid=${apiKey}&units=metric`);
   try {
     const data = await res.json();
     // console.log(data);
