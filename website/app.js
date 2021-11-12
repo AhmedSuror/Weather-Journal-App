@@ -12,16 +12,20 @@ let newDate = d.getMonth() + 1 + "." + d.getDate() + "." + d.getFullYear();
 document.getElementById("generate").addEventListener("click", generateCallBack);
 function generateCallBack(e) {
   let zip = document.getElementById("zip").value;
-  let content = document.getElementById("feelings").value;
-  getWeatherData(zip, key).then(function (data) {
-    postData("/set-weather-data", {
-      temp: data.main.temp,
-      date: newDate,
-      content: content,
-    }).then(function () {
-      updateUIFromEndPoint();
+  if (zip.trim().length === 0) {
+    alert("Please enter ZIP code first.");
+  } else {
+    let content = document.getElementById("feelings").value;
+    getWeatherData(zip, key).then(function (data) {
+      postData("/set-weather-data", {
+        temp: data.main.temp,
+        date: newDate,
+        content: content,
+      }).then(function () {
+        updateUIFromEndPoint();
+      });
     });
-  });
+  }
 }
 
 // Fetch functions
@@ -33,7 +37,9 @@ function generateCallBack(e) {
  * @returns Weather data.
  */
 const getWeatherData = async (zip, apiKey) => {
-  const res = await fetch(`${baseURL}zip=${zip}&appid=${apiKey}&units=metric`);
+  const res = await fetch(
+    `${baseURL}zip=${zip.trim()}&appid=${apiKey}&units=metric`
+  );
   try {
     const data = await res.json();
     // console.log(data);
